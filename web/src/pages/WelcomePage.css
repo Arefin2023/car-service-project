@@ -1,6 +1,5 @@
 .flex-container {
     display: flex;
-    flex-direction: row;
     gap: 20px;
     flex-wrap: wrap;
     margin-bottom: 20px;
@@ -11,8 +10,7 @@
         background-color: lightblue;
         opacity: 90%;
         border: 1px solid gray;
-        margin: 0,10px;
-        border-radius: 10px;  
+        border-radius: 10px;
 }
 .box h2{
     color: orange;
