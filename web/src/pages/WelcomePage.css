@@ -1,19 +1,24 @@
 .flex-container {
     display: flex;
+    width: 100%;
     gap: 20px;
     flex-wrap: wrap;
     margin-bottom: 20px;
+    justify-content: center;
 }
 .box { 
         width: 300px;
         height: 200px;
-        background-color: lightblue;
+        background-color: steelblue;
         opacity: 90%;
         border: 1px solid gray;
-        border-radius: 10px;
+        border-radius: 15px;
 }
 .box h2{
     color: orange;
     text-align: center;
     
+}
+h1 {
+    color: steelblue;
 }

@@ -6,7 +6,7 @@ export function RootLayout() {
       <header>
         <h1>Car Service Project</h1>
       </header>
-      <main>
+      <main style={{ width: "100%" }}>
         <Outlet />
       </main>
       <footer>
