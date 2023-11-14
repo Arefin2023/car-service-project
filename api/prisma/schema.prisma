@@ -22,4 +22,6 @@ model Appointment {
   customer   Customer @relation(fields: [customerId], references: [id])
   customerId Int
   title      String
+  start      DateTime
+  end        DateTime
 }

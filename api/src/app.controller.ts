@@ -3,6 +3,8 @@ import { AppService } from './app.service';
 import { ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, MinLength } from 'class-validator';
+import { CustomerService } from './customer.service';
+import { AppointmentService } from './appointment.service';
 
 class PostLoginRequest {
   @ApiProperty({
@@ -29,6 +31,8 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly logger: Logger,
+    private readonly customerService: CustomerService,
+    private readonly appointmentService: AppointmentService,
   ) {}
   @Get()
   getHello(): string {
