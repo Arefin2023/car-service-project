@@ -3,7 +3,7 @@ import "./WelcomePage.css";
 export function WelcomePage() {
   return (
     <>
-      <h1>Welcome Page</h1>
+      <h3>Welcome Page</h3>
       <div className="flex-container">
         <Link to="/appointment">
           <div className="box">
