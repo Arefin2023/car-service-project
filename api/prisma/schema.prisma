@@ -24,4 +24,5 @@ model Appointment {
   title      String
   start      DateTime
   end        DateTime
+  test       String
 }
