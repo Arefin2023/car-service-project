@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import "./AppointmentPage.css";
-import { CustomizedTable } from "../components/CustomizedTable";
+import { AppointmentTable } from "../components/AppointmentTable";
 function createData(date, customer, car, service) {
   return { date, customer, car, service };
 }
@@ -17,10 +16,8 @@ export function AppointmentPage() {
     <>
       <div style={{ width: "100vw" }}>
         <h3>Appointments page</h3>
-        <div className="car-movement">
-          <div className="car">🚙</div>
-        </div>
-        <CustomizedTable rows={rows} />
+
+        <AppointmentTable rows={rows} />
         <Link to="/welcome">Back to Welcome Page</Link>
       </div>
     </>
