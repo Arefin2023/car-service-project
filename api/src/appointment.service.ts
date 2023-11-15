@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Appointment, Prisma } from '@prisma/client';
 
-export type AppointmentWithCustomer = Prisma.AppointmentGetPayload<{
-  include: { customer: true };
+export type AppointmentWithCustomerAndCar = Prisma.AppointmentGetPayload<{
+  include: { customer: true; car: true };
 }>;
 
 @Injectable()
@@ -12,10 +12,10 @@ export class AppointmentService {
 
   async appointment(
     appointmentWhereUniqueInput: Prisma.AppointmentWhereUniqueInput,
-  ): Promise<AppointmentWithCustomer | null> {
+  ): Promise<AppointmentWithCustomerAndCar | null> {
     return this.prisma.appointment.findUnique({
       where: appointmentWhereUniqueInput,
-      include: { customer: true },
+      include: { customer: true, car: true },
     });
   }
 
@@ -25,7 +25,7 @@ export class AppointmentService {
     cursor?: Prisma.AppointmentWhereUniqueInput;
     where?: Prisma.AppointmentWhereInput;
     orderBy?: Prisma.AppointmentOrderByWithRelationInput;
-  }): Promise<AppointmentWithCustomer[]> {
+  }): Promise<AppointmentWithCustomerAndCar[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.appointment.findMany({
       skip,
@@ -33,16 +33,24 @@ export class AppointmentService {
       cursor,
       where,
       orderBy,
-      include: { customer: true },
+      include: { customer: true, car: true },
     });
   }
 
-  async createAppointment(
-    data: Prisma.AppointmentCreateWithoutCustomerInput,
-    customerId: number,
-  ): Promise<Appointment> {
+  async createAppointment(data: {
+    service: string;
+    start: Date;
+    end: Date;
+    customerId: number;
+    vehicleId: string;
+  }): Promise<Appointment> {
+    const { vehicleId, customerId, ...rest } = data;
     return this.prisma.appointment.create({
-      data: { ...data, customer: { connect: { id: customerId } } },
+      data: {
+        ...rest,
+        customer: { connect: { id: customerId } },
+        car: { connect: { vehicleId: vehicleId } },
+      },
     });
   }
 

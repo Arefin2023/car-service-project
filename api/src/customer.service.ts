@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Customer, Prisma } from '@prisma/client';
 
-export type CustomerWithAppointments = Prisma.CustomerGetPayload<{
-  include: { appointments: true };
+import { PostCustomerRequest } from './customer.controller';
+
+export type CustomerWithAppointmentsAndCars = Prisma.CustomerGetPayload<{
+  include: { appointments: true; cars: true };
 }>;
 @Injectable()
 export class CustomerService {
@@ -11,10 +13,10 @@ export class CustomerService {
 
   async customer(
     customerWhereUniqueInput: Prisma.CustomerWhereUniqueInput,
-  ): Promise<CustomerWithAppointments | null> {
+  ): Promise<CustomerWithAppointmentsAndCars | null> {
     return this.prisma.customer.findUnique({
       where: customerWhereUniqueInput,
-      include: { appointments: true },
+      include: { appointments: true, cars: true },
     });
   }
 
@@ -24,7 +26,7 @@ export class CustomerService {
     cursor?: Prisma.CustomerWhereUniqueInput;
     where?: Prisma.CustomerWhereInput;
     orderBy?: Prisma.CustomerOrderByWithRelationInput;
-  }): Promise<CustomerWithAppointments[]> {
+  }): Promise<CustomerWithAppointmentsAndCars[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.customer.findMany({
       skip,
@@ -32,13 +34,22 @@ export class CustomerService {
       cursor,
       where,
       orderBy,
-      include: { appointments: true },
+      include: { appointments: true, cars: true },
     });
   }
 
-  async createCustomer(data: Prisma.CustomerCreateInput): Promise<Customer> {
+  async createCustomer(
+    data: PostCustomerRequest,
+  ): Promise<CustomerWithAppointmentsAndCars> {
+    const { cars = [], ...rest } = data;
     return this.prisma.customer.create({
-      data,
+      data: {
+        ...rest,
+        cars: {
+          create: cars,
+        },
+      },
+      include: { appointments: true, cars: true },
     });
   }
 

@@ -1,14 +1,36 @@
-import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
-import { AppService } from './app.service';
-import { ApiParam, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import {
+  Body,
+  ConflictException,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
+import {
+  ApiParam,
+  ApiProperty,
+  ApiPropertyOptional,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail } from 'class-validator';
-import { CustomerService, CustomerWithAppointments } from './customer.service';
-import { CustomerEntity, AppointmentEntity } from './entities';
+import { AppService } from './app.service';
+import {
+  CustomerService,
+  CustomerWithAppointmentsAndCars,
+} from './customer.service';
+import { AppointmentEntity, CarEntity, CustomerEntity } from './entities';
 
-class PostCustomerRequest {
+export class PostCustomerRequest {
   @ApiProperty({
     description: 'E-Mail',
+    example: 'john@doe.com',
   })
   @Transform(({ value }) => {
     return value.toLowerCase().trim();
@@ -17,8 +39,15 @@ class PostCustomerRequest {
   email: string;
   @ApiProperty({
     description: 'Name',
+    example: 'John Doe',
   })
   name: string;
+
+  @ApiPropertyOptional({
+    example: [{ model: 'Volvo V70', vehicleId: '12345' }],
+    description: 'Cars',
+  })
+  cars?: CarEntity[];
 }
 
 class CustomerResponse extends CustomerEntity {
@@ -27,12 +56,19 @@ class CustomerResponse extends CustomerEntity {
     type: [AppointmentEntity],
   })
   appointments: AppointmentEntity[];
-  constructor(customer: CustomerWithAppointments) {
+  @ApiProperty({
+    description: 'Cars',
+    type: [CarEntity],
+  })
+  cars: CarEntity[];
+  constructor(customer: CustomerWithAppointmentsAndCars) {
     super(customer);
     this.appointments = customer.appointments || [];
+    this.cars = customer.cars || [];
   }
 }
 
+@ApiTags('Customers')
 @Controller('/customers')
 export class CustomerController {
   constructor(
@@ -46,11 +82,37 @@ export class CustomerController {
     description: 'Customer created',
     type: CustomerResponse,
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request body',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Customer email or vehicleId already exists',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Unexpected error',
+  })
   async createCustomer(
     @Body() customerData: PostCustomerRequest,
   ): Promise<CustomerResponse> {
-    const customer = await this.customerService.createCustomer(customerData);
-    return new CustomerResponse({ ...customer, appointments: [] });
+    try {
+      const customer = await this.customerService.createCustomer(customerData);
+      return new CustomerResponse({ ...customer, appointments: [], cars: [] });
+    } catch (err) {
+      console.log(err);
+      switch (err.code) {
+        case 'P2002':
+          const messages = [];
+          for (const value of Object.values(err.meta.target)) {
+            messages.push(`Conflict: ${value} already exists`);
+          }
+          throw new ConflictException(messages.join(', '));
+        default:
+          throw new InternalServerErrorException('Unexpected error');
+      }
+    }
   }
 
   @Get('/')
@@ -59,24 +121,81 @@ export class CustomerController {
     description: 'List of customers',
     type: [CustomerResponse],
   })
+  @ApiResponse({
+    status: 500,
+    description: 'Unexpected error',
+  })
   async getCustomers(): Promise<CustomerResponse[]> {
     const customers = await this.customerService.customers({});
     return customers.map((customer) => new CustomerResponse(customer));
   }
   @Get('/:id')
+  @ApiParam({
+    name: 'id',
+    description: 'Customer Id',
+    type: Number,
+    example: 1,
+  })
   @ApiResponse({
     status: 200,
     description: 'Customer',
     type: CustomerResponse,
   })
+  @ApiResponse({
+    status: 404,
+    description: 'Customer not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Unexpected error',
+  })
+  async getCustomer(@Param('id') id: string): Promise<CustomerResponse> {
+    console.log('id', id);
+    try {
+      const customer = await this.customerService.customer({ id: Number(id) });
+      if (!customer) throw { message: 'customer not found', code: '404' };
+      return new CustomerResponse(customer);
+    } catch (error) {
+      this.logger.error(error);
+      switch (error.code) {
+        case '404':
+          throw new NotFoundException('Customer not found');
+        default:
+          throw new InternalServerErrorException('Unexpected error');
+      }
+    }
+  }
+  @Delete('/:id')
+  @ApiResponse({
+    status: 204,
+    description: 'Customer deleted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Customer doesn't exist",
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Unexpected error',
+  })
   @ApiParam({
     name: 'id',
-    description: 'Appointment Id',
+    description: 'Customer Id',
     type: Number,
     example: 1,
   })
-  async getCustomer(@Param('id') id: string): Promise<CustomerResponse> {
-    const customer = await this.customerService.customer({ id: Number(id) });
-    return new CustomerResponse(customer);
+  @HttpCode(204)
+  async deleteCustomer(@Param('id') id: number): Promise<void> {
+    try {
+      await this.customerService.deleteCustomer({ id });
+    } catch (err) {
+      this.logger.error(err);
+      switch (err.code) {
+        case 'P2025':
+          throw new NotFoundException("Customer doesn't exist");
+        default:
+          throw new InternalServerErrorException('Unexpected error');
+      }
+    }
   }
 }
