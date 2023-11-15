@@ -3,17 +3,6 @@ import { AppointmentTable } from "../components/AppointmentTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// function createData(date, customer, car, service) {
-//   return { date, customer, car, service };
-// }
-
-// const rows = [
-//   createData("Today", "customer1", "car1", "oil change"),
-//   createData("Today", "customer2", "car2", "filter change"),
-//   createData("Today", "customer3", "car3", "oil change"),
-//   createData("Tomorrow", "customer4", "car4", "brake repair"),
-//   createData("Tomorrow", "customer5", "car5", "wheel alignment"),
-// ];
 export function AppointmentPage() {
   const url = "/api/appointments";
   const [isLoading, setIsLoading] = useState(false);
