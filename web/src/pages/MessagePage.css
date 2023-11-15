@@ -1,0 +1,17 @@
+.container-box{
+    display: flex;
+    justify-content: center;
+    
+}
+button{
+    background-color: steelblue;
+    color: whitesmoke;
+    
+}
+button:hover{
+    background-color: orange;
+}
+li{
+    display: flex;
+    gap: 10px;
+}
