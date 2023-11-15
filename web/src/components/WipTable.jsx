@@ -23,9 +23,7 @@ export function WipTable({ rows }) {
         <TableBody>
           {rows.map((row) => (
             <StyledTableRow key={row.customer}>
-              <StyledTableCell component="tr" scope="row">
-                {row.job}
-              </StyledTableCell>
+              <StyledTableCell>{row.job}</StyledTableCell>
               <StyledTableCell align="right">{row.car}</StyledTableCell>
               <StyledTableCell align="right">{row.service}</StyledTableCell>
               <StyledTableCell align="right">{row.efd}</StyledTableCell>

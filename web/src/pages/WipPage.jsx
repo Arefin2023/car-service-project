@@ -11,7 +11,7 @@ const wiprows = [
   createData("job4", "car4", "brake repair", "two days later"),
   createData("job5", "car5", "wheel alignment", "three days later"),
 ];
-console.log(wiprows);
+
 export function WipPage() {
   return (
     <>
