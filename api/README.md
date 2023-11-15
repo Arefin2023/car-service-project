@@ -2,18 +2,22 @@
 
 ## Installation
 
-```bash
-$ npm install
+```sh
+npm install
 ```
 
 ## Initialize or reset database
 
-```bash
-$ npm run db:reset
+```sh
+npm run db:reset
 ```
 
 ## Running the app
 
-```bash
-$ npm run start
+```sh
+npm run start
 ```
+
+## Swagger
+
+http://localhost:3000/swagger
