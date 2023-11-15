@@ -1,10 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AppointmentWithCustomer } from './appointment.service';
+import { Appointment, Customer } from '@prisma/client';
 
 export class CustomerEntity {
+  @ApiProperty({
+    description: 'Id',
+    example: 1,
+  })
+  id: number;
+  @ApiProperty({
+    description: 'E-Mail',
+    example: 'john@doe.com',
+  })
   email: string;
+  @ApiProperty({
+    description: 'Name',
+    example: 'John Doe',
+  })
   name: string;
-  constructor(customer: { email: string; name: string }) {
+  constructor(customer: Customer) {
+    this.id = customer.id;
     this.email = customer.email;
     this.name = customer.name;
   }
@@ -13,13 +27,14 @@ export class CustomerEntity {
 export class AppointmentEntity {
   @ApiProperty({
     description: 'Id',
+    example: 1,
   })
   id: number;
-
   @ApiProperty({
-    description: 'Title',
+    example: 'oil change',
+    description: 'Service',
   })
-  title: string;
+  service: string;
   @ApiProperty({
     description: 'Start time',
   })
@@ -28,17 +43,11 @@ export class AppointmentEntity {
     description: 'End time',
   })
   end: Date;
-  @ApiProperty({
-    description: 'Customer',
-  })
-  customer?: CustomerEntity;
 
-  constructor(appointment: AppointmentWithCustomer) {
-    console.log(appointment);
+  constructor(appointment: Appointment) {
     this.id = appointment.id;
-    this.title = appointment.title;
+    this.service = appointment.service;
     this.start = appointment.start;
     this.end = appointment.end;
-    this.customer = new CustomerEntity(appointment.customer);
   }
 }

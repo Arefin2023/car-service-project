@@ -12,9 +12,10 @@ export class AppointmentService {
 
   async appointment(
     appointmentWhereUniqueInput: Prisma.AppointmentWhereUniqueInput,
-  ): Promise<Appointment | null> {
+  ): Promise<AppointmentWithCustomer | null> {
     return this.prisma.appointment.findUnique({
       where: appointmentWhereUniqueInput,
+      include: { customer: true },
     });
   }
 
@@ -37,7 +38,6 @@ export class AppointmentService {
   }
 
   async createAppointment(
-    // data: Prisma.AppointmentCreateInput,
     data: Prisma.AppointmentCreateWithoutCustomerInput,
     customerId: number,
   ): Promise<Appointment> {

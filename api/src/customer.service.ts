@@ -2,15 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Customer, Prisma } from '@prisma/client';
 
+export type CustomerWithAppointments = Prisma.CustomerGetPayload<{
+  include: { appointments: true };
+}>;
 @Injectable()
 export class CustomerService {
   constructor(private prisma: PrismaService) {}
 
   async customer(
     customerWhereUniqueInput: Prisma.CustomerWhereUniqueInput,
-  ): Promise<Customer | null> {
+  ): Promise<CustomerWithAppointments | null> {
     return this.prisma.customer.findUnique({
       where: customerWhereUniqueInput,
+      include: { appointments: true },
     });
   }
 
@@ -20,7 +24,7 @@ export class CustomerService {
     cursor?: Prisma.CustomerWhereUniqueInput;
     where?: Prisma.CustomerWhereInput;
     orderBy?: Prisma.CustomerOrderByWithRelationInput;
-  }): Promise<Customer[]> {
+  }): Promise<CustomerWithAppointments[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.customer.findMany({
       skip,
@@ -28,6 +32,7 @@ export class CustomerService {
       cursor,
       where,
       orderBy,
+      include: { appointments: true },
     });
   }
 
