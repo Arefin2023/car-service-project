@@ -21,9 +21,7 @@ export function AppointmentTable({ rows }) {
         <TableBody>
           {rows.map((row) => (
             <StyledTableRow key={row.customer}>
-              <StyledTableCell component="tr" scope="row">
-                {row.date}
-              </StyledTableCell>
+              <StyledTableCell>{row.date}</StyledTableCell>
               <StyledTableCell align="right">{row.customer}</StyledTableCell>
               <StyledTableCell align="right">{row.car}</StyledTableCell>
               <StyledTableCell align="right">{row.service}</StyledTableCell>
