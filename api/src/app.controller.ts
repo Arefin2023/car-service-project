@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 // import { IsEmail, MinLength } from 'class-validator';
 import { CustomerService } from './customer.service';
 import { AppointmentService } from './appointment.service';
+import { ApiTags } from '@nestjs/swagger';
 
 // class PostLoginRequest {
 //   @ApiProperty({
@@ -27,6 +28,7 @@ import { AppointmentService } from './appointment.service';
 //   userId: string;
 // }
 
+@ApiTags('Health check')
 @Controller()
 export class AppController {
   constructor(

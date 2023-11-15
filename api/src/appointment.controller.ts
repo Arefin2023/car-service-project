@@ -3,15 +3,18 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  InternalServerErrorException,
   Logger,
+  NotFoundException,
   Param,
   Post,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiParam, ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiParam, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   AppointmentService,
-  AppointmentWithCustomer,
+  AppointmentWithCustomerAndCar,
 } from './appointment.service';
 import { AppointmentEntity, CustomerEntity } from './entities';
 
@@ -21,6 +24,11 @@ class PostAppointmentRequest {
     description: 'Customer Id',
   })
   customerId: number;
+  @ApiProperty({
+    example: '12345',
+    description: 'Vehicle Id',
+  })
+  vehicleId: string;
   @ApiProperty({
     example: 'oil change',
     description: 'Service',
@@ -47,12 +55,13 @@ export class AppointmentResponse extends AppointmentEntity {
     type: CustomerEntity,
   })
   customer: CustomerEntity;
-  constructor(appointment: AppointmentWithCustomer) {
+  constructor(appointment: AppointmentWithCustomerAndCar) {
     super(appointment);
     this.customer = new CustomerEntity(appointment.customer);
   }
 }
 
+@ApiTags('Appoinments')
 @Controller('/appointments')
 export class AppointmentController {
   constructor(
@@ -66,17 +75,33 @@ export class AppointmentController {
     description: 'Appointment created',
     type: AppointmentEntity,
   })
-  createAppointment(
+  @HttpCode(201)
+  async createAppointment(
     @Body() appointmentData: PostAppointmentRequest,
   ): Promise<AppointmentEntity> {
-    const { customerId, ...rest } = appointmentData;
-    return this.appointmentService.createAppointment(rest, customerId);
+    try {
+      return await this.appointmentService.createAppointment(appointmentData);
+    } catch (err) {
+      console.log(err);
+      console.log(err.code);
+      // this.logger.error(err);
+      switch (err.code) {
+        case 'P2025':
+          throw new NotFoundException(err.meta.cause);
+        default:
+          throw new InternalServerErrorException('Unexpected error');
+      }
+    }
   }
   @Get('/')
   @ApiResponse({
     status: 200,
     description: 'Appointment list',
     type: [AppointmentResponse],
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Unexpected error',
   })
   async getAppointments(): Promise<AppointmentResponse[]> {
     const appointments = await this.appointmentService.appointments({});
@@ -90,6 +115,14 @@ export class AppointmentController {
     description: 'Appointment',
     type: AppointmentResponse,
   })
+  @ApiResponse({
+    status: 404,
+    description: 'Appointment not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Unexpected error',
+  })
   @ApiParam({
     name: 'id',
     description: 'Appointment Id',
@@ -98,13 +131,31 @@ export class AppointmentController {
   })
   async getAppointment(@Param('id') id: number): Promise<AppointmentResponse> {
     console.log('id', id);
-    const appointment = await this.appointmentService.appointment({ id });
-    return new AppointmentResponse(appointment);
+    try {
+      const appointment = await this.appointmentService.appointment({ id });
+      if (!appointment) throw { message: 'appointment not found', code: '404' };
+      return new AppointmentResponse(appointment);
+    } catch (error) {
+      switch (error.code) {
+        case '404':
+          throw new NotFoundException('Appointment not found');
+        default:
+          throw new InternalServerErrorException('Unexpected error');
+      }
+    }
   }
   @Delete('/:id')
   @ApiResponse({
     status: 204,
     description: 'Appointment deleted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Appointment doesn't exist",
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Unexpected error',
   })
   @ApiParam({
     name: 'id',
@@ -113,6 +164,16 @@ export class AppointmentController {
     example: 1,
   })
   async deleteAppointment(@Param('id') id: number): Promise<void> {
-    await this.appointmentService.deleteAppointment({ id });
+    try {
+      await this.appointmentService.deleteAppointment({ id });
+    } catch (err) {
+      console.log(err);
+      switch (err.code) {
+        case 'P2025':
+          throw new NotFoundException("Appointment doesn't exist");
+        default:
+          throw new InternalServerErrorException('Unexpected error');
+      }
+    }
   }
 }

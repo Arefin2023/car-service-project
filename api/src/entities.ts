@@ -24,6 +24,19 @@ export class CustomerEntity {
   }
 }
 
+export class CarEntity {
+  @ApiProperty({
+    description: 'Model',
+    example: 'Volvo V70',
+  })
+  model: string;
+  @ApiProperty({
+    description: 'Vehicle Id',
+    example: '12345',
+  })
+  vehicleId: string;
+}
+
 export class AppointmentEntity {
   @ApiProperty({
     description: 'Id',
