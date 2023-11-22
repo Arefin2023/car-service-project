@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSignIn } from "@clerk/clerk-expo";
 
 function LoginPage() {
+  const [signIn, setActive, isLoaded] = useSignIn();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
