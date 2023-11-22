@@ -18,7 +18,6 @@ import {
   RedirectToSignIn,
   SignIn,
   SignUp,
-  UserButton,
 } from "@clerk/clerk-react";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
@@ -47,7 +46,6 @@ const router = createBrowserRouter([
           <>
             <SignedIn>
               <WelcomePage />
-              <UserButton afterSignOutUrl="http://localhost:5173/" />
             </SignedIn>
             <SignedOut>
               <RedirectToSignIn />
@@ -61,7 +59,6 @@ const router = createBrowserRouter([
           <>
             <SignedIn>
               <AppointmentPage />
-              <UserButton afterSignOutUrl="http://localhost:5173/" />
             </SignedIn>
             <SignedOut>
               <RedirectToSignIn />
@@ -75,7 +72,6 @@ const router = createBrowserRouter([
           <>
             <SignedIn>
               <WipPage />
-              <UserButton afterSignOutUrl="http://localhost:5173/" />
             </SignedIn>
             <SignedOut>
               <RedirectToSignIn />
@@ -89,7 +85,6 @@ const router = createBrowserRouter([
           <>
             <SignedIn>
               <MessagePage />
-              <UserButton afterSignOutUrl="http://localhost:5173/" />
             </SignedIn>
             <SignedOut>
               <RedirectToSignIn />
@@ -103,7 +98,6 @@ const router = createBrowserRouter([
           <>
             <SignedIn>
               <ServiceHistoryPage />
-              <UserButton afterSignOutUrl="http://localhost:5173/" />
             </SignedIn>
             <SignedOut>
               <RedirectToSignIn />
