@@ -1,4 +1,5 @@
 import { Tabs } from "expo-router";
+import { View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useUser } from "@clerk/clerk-expo";
 import { Redirect } from "expo-router";

@@ -1,7 +1,7 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, TextInput } from "react-native";
 import { baseStyles, palette } from "../../styles/styles";
 import { useState } from "react";
-import { TextInput } from "react-native";
+import { useSignIn } from "@clerk/clerk-expo";
 
 function LoginPage() {
   const [formData, setFormData] = useState({
@@ -18,12 +18,23 @@ function LoginPage() {
     });
   }
 
-  function handleSubmit() {
-    console.log(formData);
-    setFormData({
-      email: "",
-      password: "",
-    });
+  async function handleSubmit() {
+    if (!isLoaded) {
+      return;
+    }
+    try {
+      const completeSignIn = await signIn.create({
+        identifier: formData.email,
+        password: formData.password,
+      });
+      await setActive({ session: completeSignIn.createdSessionId });
+      // ADD THIS LINE:
+      router.replace("/");
+      // ClerkProvider now knows that the user is logged in and will render the previously protected route
+    } catch (err) {
+      Alert.alert("Error", "Login failed - please try again.");
+      console.log(err);
+    }
   }
   return (
     <View style={[baseStyles.container]}>
@@ -32,6 +43,7 @@ function LoginPage() {
         <View style={[baseStyles.formGroup]}>
           <Text style={[baseStyles.label]}>Email</Text>
           <TextInput
+            autoCapitalize="none"
             selectionColor={palette.white}
             style={[baseStyles.input]}
             onChangeText={(value) => handleChange("email", value)}
