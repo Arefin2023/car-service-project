@@ -5,7 +5,7 @@ export function LoginPage() {
     <>
       <h1>Login Page</h1>
       <SignIn />
-      <Link to="./welcome">Welcome</Link>
+      <Link to="./sign-in">Welcome</Link>
     </>
   );
 }
