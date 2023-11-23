@@ -1,10 +1,27 @@
-import { View, Text, Pressable, TextInput } from "react-native";
-import { baseStyles, palette } from "../../styles/styles";
+import { useSignIn, useOAuth } from "@clerk/clerk-expo";
+import { router } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import { useState } from "react";
-import { useSignIn } from "@clerk/clerk-expo";
+import { View, Text, Pressable, TextInput, Alert } from "react-native";
+
+import { useWarmUpBrowser } from "../hooks/useWarmupBrowser";
+import { baseStyles, palette } from "../styles/styles";
+
+WebBrowser.maybeCompleteAuthSession();
 
 function LoginPage() {
-  const [signIn, setActive, isLoaded] = useSignIn();
+  const { signIn, setActive, isLoaded } = useSignIn();
+  const { startOAuthFlow: startGoogleFlow } = useOAuth({
+    strategy: "oauth_google",
+  });
+  const { startOAuthFlow: startGithubFlow } = useOAuth({
+    strategy: "oauth_github",
+  });
+  const oAuthFlows = {
+    google: { start: startGoogleFlow },
+    github: { start: startGithubFlow },
+  };
+  useWarmUpBrowser();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,6 +54,21 @@ function LoginPage() {
       console.log(err);
     }
   }
+  async function handleOAuthLogin(type) {
+    try {
+      const { createdSessionId, signIn, signUp, setActive } =
+        await oAuthFlows[type].start();
+
+      if (createdSessionId) {
+        await setActive({ session: createdSessionId });
+        router.replace("/");
+      } else {
+        // Use signIn or signUp for next steps such as MFA
+      }
+    } catch (err) {
+      console.error("OAuth error", err);
+    }
+  }
   return (
     <View style={[baseStyles.container]}>
       <Text style={[baseStyles.heading]}>Login</Text>
@@ -58,7 +90,7 @@ function LoginPage() {
             style={[baseStyles.input]}
             onChangeText={(value) => handleChange("password", value)}
             value={formData.password}
-            secureTextEntry={true}
+            secureTextEntry
           />
         </View>
         <Pressable
@@ -72,6 +104,30 @@ function LoginPage() {
           onPress={() => handleSubmit()}
         >
           <Text style={[baseStyles.text]}>Login</Text>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => {
+            return {
+              ...baseStyles.button,
+              marginTop: 10,
+              borderColor: pressed ? palette.white : palette.mediumBlue,
+            };
+          }}
+          onPress={() => handleOAuthLogin("google")}
+        >
+          <Text style={[baseStyles.text]}>Login with Google</Text>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => {
+            return {
+              ...baseStyles.button,
+              marginTop: 10,
+              borderColor: pressed ? palette.white : palette.mediumBlue,
+            };
+          }}
+          onPress={() => handleOAuthLogin("github")}
+        >
+          <Text style={[baseStyles.text]}>Login with GitHub</Text>
         </Pressable>
       </View>
     </View>

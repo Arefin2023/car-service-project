@@ -1,13 +1,13 @@
-import { Tabs } from "expo-router";
-import { View } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
 import { useUser } from "@clerk/clerk-expo";
-import { Redirect } from "expo-router";
-import { palette } from "../../styles/styles";
+import { FontAwesome } from "@expo/vector-icons";
+import { Tabs, Redirect } from "expo-router";
+import { View } from "react-native";
+
+import { palette } from "../styles/styles";
 export default function TabLayout() {
   const { isSignedIn, isLoaded } = useUser();
   if (!isLoaded) {
-    return <View style={{ flex: 1, backgroundColor: palette.darkBlue }}></View>;
+    return <View style={{ flex: 1, backgroundColor: palette.darkBlue }} />;
   }
   if (!isSignedIn) {
     return <Redirect href="/login" />;
