@@ -4,13 +4,19 @@ import { Text, View, Pressable } from "react-native";
 import { Calendar } from "react-native-calendars";
 export default function Appointment() {
   const [appointmentDate, setAppointmentDate] = useState("");
+  // const today = Date().currentDate;
   return (
     <View>
       <Text>Book an Appointment</Text>
       <View>
         <Calendar
+          minDate="2023-11-25"
+          maxDate="2023-12-25"
           onDayPress={(day) => {
             setAppointmentDate(day);
+          }}
+          markedDates={{
+            "2023-11-30": { selected: true, selectedColor: "steelblue" },
           }}
         />
       </View>
@@ -23,7 +29,7 @@ export default function Appointment() {
           <Pressable
             style={{
               backgroundColor: "steelblue",
-              width: 100,
+              width: 120,
               borderRadius: 5,
               height: 30,
             }}
