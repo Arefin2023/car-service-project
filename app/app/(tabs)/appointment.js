@@ -1,7 +1,7 @@
-import { Text, View, Pressable } from "react-native";
 import { Link } from "expo-router";
-import { Calendar } from "react-native-calendars";
 import { useState } from "react";
+import { Text, View, Pressable } from "react-native";
+import { Calendar } from "react-native-calendars";
 export default function Appointment() {
   const [appointmentDate, setAppointmentDate] = useState("");
   return (
