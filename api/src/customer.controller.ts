@@ -129,6 +129,18 @@ export class CustomerController {
     const customers = await this.customerService.customers({});
     return customers.map((customer) => new CustomerResponse(customer));
   }
+  @Get('/profile')
+  @ApiResponse({
+    status: 200,
+    description: 'Customer profile',
+    type: CustomerResponse,
+  })
+  async getCustomerProfile(): Promise<CustomerResponse> {
+    // const customer = await this.customerService.customer({
+    //   id: this.appService.customerId,
+    // });
+    return new CustomerResponse(customer);
+  }
   @Get('/:id')
   @ApiParam({
     name: 'id',
