@@ -15,7 +15,7 @@ export default function TabLayout() {
       // do axios call to check if profile is completed
       // if completed, setProfileCompleted(1)
       // else setProfileCompleted(0)
-      setProfileCompleted(0);
+      setProfileCompleted(1);
     }
     if (user?.id) {
       checkProfile();
