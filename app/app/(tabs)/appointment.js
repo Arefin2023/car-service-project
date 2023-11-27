@@ -1,40 +1,45 @@
+import dayjs from "dayjs";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Text, View, Pressable } from "react-native";
 import { Calendar } from "react-native-calendars";
+
 export default function Appointment() {
+  const tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD");
   const [appointmentDate, setAppointmentDate] = useState("");
-  // const today = Date().currentDate;
+  const selectedDate = appointmentDate.dateString;
   return (
     <View>
       <Text>Book an Appointment</Text>
       <View>
         <Calendar
-          minDate="2023-11-25"
-          maxDate="2023-12-25"
+          minDate={tomorrow}
+          maxDate={dayjs(tomorrow).add(30, "day").format("YYYY-MM-DD")}
           onDayPress={(day) => {
             setAppointmentDate(day);
           }}
           markedDates={{
-            "2023-11-30": { selected: true, selectedColor: "steelblue" },
+            [selectedDate]: { selected: true, selectedColor: "steelblue" },
           }}
         />
       </View>
       {appointmentDate !== "" ? (
         <View>
           <Text>
-            You have selected an appointment for {appointmentDate.day}.
-            {appointmentDate.month}.{appointmentDate.year}
+            You have selected an appointment for{" "}
+            {dayjs(selectedDate).format("DD.MM.YYYY")}
           </Text>
           <Pressable
             style={{
               backgroundColor: "steelblue",
-              width: 120,
+              width: 150,
               borderRadius: 5,
-              height: 30,
+              height: 50,
             }}
           >
-            <Text style={{ textAlign: "center" }}>Click to confirm</Text>
+            <Text style={{ textAlign: "center", color: "white" }}>
+              Click to confirm
+            </Text>
           </Pressable>
         </View>
       ) : null}
