@@ -27,6 +27,8 @@ function LoginPage() {
     password: "",
   });
 
+  console.log("/login");
+
   function handleChange(element, value) {
     setFormData((prev) => {
       return {
@@ -61,6 +63,7 @@ function LoginPage() {
 
       if (createdSessionId) {
         await setActive({ session: createdSessionId });
+
         router.replace("/");
       } else {
         // Use signIn or signUp for next steps such as MFA
