@@ -1,7 +1,8 @@
-import { View, Text, Pressable, TextInput, Alert } from "react-native";
-import { baseStyles, palette } from "../styles/styles";
 import { useUser } from "@clerk/clerk-react";
 import { Redirect, router } from "expo-router";
+import { View, Text, Pressable, TextInput, Alert } from "react-native";
+
+import { baseStyles, palette } from "../styles/styles";
 
 export default function ProfileForm() {
   const { user } = useUser();

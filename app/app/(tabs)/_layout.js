@@ -1,10 +1,10 @@
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
 import { Tabs, Redirect } from "expo-router";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 
 import { palette } from "../styles/styles";
-import { useEffect, useState } from "react";
 export default function TabLayout() {
   const { isSignedIn, isLoaded, user } = useUser();
   const [profileCompleted, setProfileCompleted] = useState(-1); // -1: not loaded, 0: not completed, 1: completed
