@@ -17,7 +17,7 @@ export default function TabLayout() {
       try {
         const { data } = await axios.get(url);
         console.log(data);
-        if (data.name !== "") {
+        if (data.name && data.cars.length > 0) {
           setProfileCompleted(1);
         } else {
           setProfileCompleted(0);
