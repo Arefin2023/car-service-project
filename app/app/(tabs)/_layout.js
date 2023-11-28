@@ -1,5 +1,6 @@
 import { useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
+import axios from "axios";
 import { Tabs, Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
@@ -12,10 +13,21 @@ export default function TabLayout() {
   useEffect(() => {
     setProfileCompleted(-1);
     async function checkProfile() {
+      const url = "http://192.168.178.51:3000/customers";
+      try {
+        const { data } = await axios.get(url);
+        console.log(data);
+        if (data.name !== "") {
+          setProfileCompleted(1);
+        } else {
+          setProfileCompleted(0);
+        }
+      } catch (error) {
+        console.log(error);
+      }
       // do axios call to check if profile is completed
       // if completed, setProfileCompleted(1)
       // else setProfileCompleted(0)
-      setProfileCompleted(1);
     }
     if (user?.id) {
       checkProfile();
