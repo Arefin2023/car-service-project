@@ -39,7 +39,7 @@ export class CustomerService {
   }
 
   async createCustomer(
-    data: PostCustomerRequest,
+    data: PostCustomerRequest & { userId: string },
   ): Promise<CustomerWithAppointmentsAndCars> {
     const { cars = [], ...rest } = data;
     return this.prisma.customer.create({
@@ -58,8 +58,14 @@ export class CustomerService {
     data: Prisma.CustomerUpdateInput;
   }): Promise<Customer> {
     const { where, data } = params;
-    return this.prisma.customer.update({
-      data,
+    const { userId, ...rest } = data;
+    return this.prisma.customer.upsert({
+      create: {
+        email: data.email as string,
+        name: data.name as string,
+        userId: userId as string,
+      },
+      update: rest,
       where,
     });
   }

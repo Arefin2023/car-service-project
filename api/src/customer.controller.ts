@@ -22,6 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import { IsEmail } from 'class-validator';
 import { AppService } from './app.service';
@@ -30,6 +31,7 @@ import {
   CustomerWithAppointmentsAndCars,
 } from './customer.service';
 import { AppointmentEntity, CarEntity, CustomerEntity } from './entities';
+import clerkClient from '@clerk/clerk-sdk-node';
 
 export const ReqAuth = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
@@ -107,10 +109,27 @@ export class CustomerController {
     description: 'Unexpected error',
   })
   async createCustomer(
+    @Req() req,
     @Body() customerData: PostCustomerRequest,
   ): Promise<CustomerResponse> {
+    console.log();
     try {
-      const customer = await this.customerService.createCustomer(customerData);
+      const userId = req.auth.claims.sub;
+      const user = await clerkClient.users.getUser(userId);
+      console.log('user', user);
+      const primaryEmail = await user.emailAddresses.find((item) => {
+        return item.id === user.primaryEmailAddressId;
+      });
+      const customer = await this.customerService.updateCustomer({
+        where: { userId },
+        data: {
+          name: customerData.name,
+          email: primaryEmail.emailAddress,
+          cars: [] as Prisma.CarCreateNestedManyWithoutCustomerInput,
+          appointments:
+            [] as Prisma.AppointmentCreateNestedManyWithoutCustomerInput,
+        },
+      });
       return new CustomerResponse({ ...customer, appointments: [], cars: [] });
     } catch (err) {
       console.log(err);
@@ -151,7 +170,9 @@ export class CustomerController {
     // const customer = await this.customerService.customer({
     //   id: this.appService.customerId,
     // });
-    this.logger.debug('auth', req.auth);
+    const user = await clerkClient.users.getUser(req.auth.sub);
+    // this.logger.debug('auth', req.auth);
+    this.logger.debug('user', user);
   }
   @Get('/:id')
   @ApiParam({

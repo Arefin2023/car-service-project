@@ -8,6 +8,11 @@ export class CustomerEntity {
   })
   id: number;
   @ApiProperty({
+    description: 'userId',
+    example: 'user_id_from_clerk',
+  })
+  userId: string;
+  @ApiProperty({
     description: 'E-Mail',
     example: 'john@doe.com',
   })
@@ -19,6 +24,7 @@ export class CustomerEntity {
   name: string;
   constructor(customer: Customer) {
     this.id = customer.id;
+    this.userId = customer.userId;
     this.email = customer.email;
     this.name = customer.name;
   }
