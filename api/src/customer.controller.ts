@@ -3,6 +3,7 @@ import {
   ConflictException,
   Controller,
   Delete,
+  ExecutionContext,
   Get,
   HttpCode,
   InternalServerErrorException,
@@ -10,8 +11,11 @@ import {
   NotFoundException,
   Param,
   Post,
+  Req,
+  createParamDecorator,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiParam,
   ApiProperty,
   ApiPropertyOptional,
@@ -26,6 +30,13 @@ import {
   CustomerWithAppointmentsAndCars,
 } from './customer.service';
 import { AppointmentEntity, CarEntity, CustomerEntity } from './entities';
+
+export const ReqAuth = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.auth;
+  },
+);
 
 export class PostCustomerRequest {
   @ApiProperty({
@@ -68,6 +79,7 @@ class CustomerResponse extends CustomerEntity {
   }
 }
 
+@ApiBearerAuth()
 @ApiTags('Customers')
 @Controller('/customers')
 export class CustomerController {
@@ -135,11 +147,11 @@ export class CustomerController {
     description: 'Customer profile',
     type: CustomerResponse,
   })
-  async getCustomerProfile(): Promise<CustomerResponse> {
+  async getCustomerProfile(@Req() req): Promise<void> {
     // const customer = await this.customerService.customer({
     //   id: this.appService.customerId,
     // });
-    return new CustomerResponse(customer);
+    this.logger.debug('auth', req.auth);
   }
   @Get('/:id')
   @ApiParam({
