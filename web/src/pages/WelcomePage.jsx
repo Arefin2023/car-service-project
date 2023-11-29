@@ -1,9 +1,41 @@
 import { Link } from "react-router-dom";
 import "./WelcomePage.css";
+import { useState } from "react";
+import { useAuth } from "@clerk/clerk-react";
+
 export function WelcomePage() {
+  const [token, setToken] = useState(null);
+
+  const { getToken } = useAuth();
   return (
     <>
       <h3>Welcome Page</h3>
+      <div className="flex-container">
+        {token ? (
+          <>
+            <p>{token.slice(0, 9) + "..."}</p>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(token);
+              }}
+            >
+              Copy
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => {
+                getToken().then((token) => {
+                  setToken(token);
+                });
+              }}
+            >
+              Get Token
+            </button>
+          </>
+        )}
+      </div>
       <div className="flex-container">
         <Link to="/appointment">
           <div className="box">
