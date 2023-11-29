@@ -94,6 +94,7 @@ export const createAppointment = async (req, res) => {
 };
 
 export const adminGetAppointments = async (req, res) => {
+  console.log("adminGetAppointments");
   try {
     const appointments = await knex("appointments").select("*");
     return res.json(appointments);

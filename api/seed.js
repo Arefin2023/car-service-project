@@ -44,6 +44,11 @@ for (const user of users) {
     name: user.fullName,
     email: primaryEmailAddress.emailAddress,
   });
+  await knex("appointments").insert({
+    customerId: user.id,
+    service: "Oil Change",
+    startTime: "2021-06-01T09:00:00.000Z",
+  });
 }
 
 await knex.destroy();

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export function AppointmentPage() {
-  const url = "/api/appointments";
+  const url = "/api/admin/appointments";
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState([]);
@@ -14,6 +14,7 @@ export function AppointmentPage() {
       try {
         setIsLoading(true);
         const { data } = await axios.get(url);
+        console.log(data);
         setData(data);
       } catch (error) {
         setIsError(true);
@@ -33,9 +34,9 @@ export function AppointmentPage() {
   const rows = data.map((item) => {
     console.log(item);
     return {
-      date: formatDate(item.start),
-      customer: item.customer.name,
-      car: item.id,
+      date: formatDate(item.startTime),
+      customer: "item.customer.name",
+      car: "item.customer.vehicleId",
       service: item.service,
     };
   });

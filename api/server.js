@@ -211,7 +211,15 @@ app.get("/admin/customers", ClerkExpressRequireAuth(), adminGetCustomers);
  *       '500':
  *          description: Internal Server Error
  */
-app.get("/admin/appointments", ClerkExpressRequireAuth(), adminGetAppointments);
+app.get(
+  "/admin/appointments",
+  (req, res, next) => {
+    console.log(req.headers);
+    next();
+  },
+  // ClerkExpressRequireAuth(),
+  adminGetAppointments
+);
 
 app.listen(port, () => {
   console.log(`car-service-api running on port ${port}`);
