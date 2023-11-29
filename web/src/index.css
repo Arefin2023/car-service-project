@@ -13,8 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-#root{
-  
+#root {
   width: 100%;
 }
 
@@ -30,16 +29,16 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  
+
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
-main{
+/* main{
   display: flex;
   justify-content: center;
   
-}
+} */
 
 h1 {
   font-size: 3.2em;
@@ -82,6 +81,6 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-footer{
+footer {
   align-self: flex-start;
 }
