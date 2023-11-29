@@ -1,9 +1,9 @@
+import { useAuth } from "@clerk/clerk-expo";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { Redirect, router } from "expo-router";
 import { useState } from "react";
 import { View, Text, Pressable, TextInput, Alert } from "react-native";
-import { useAuth } from "@clerk/clerk-expo";
 
 import { baseStyles, palette } from "../styles/styles";
 

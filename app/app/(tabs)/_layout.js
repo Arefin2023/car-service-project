@@ -4,6 +4,7 @@ import axios from "axios";
 import { Redirect, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+
 import { palette } from "../styles/styles";
 
 const apiHost = process.env.EXPO_PUBLIC_API_HOST;

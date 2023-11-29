@@ -1,10 +1,10 @@
+import { useAuth } from "@clerk/clerk-expo";
 import axios from "axios";
 import dayjs from "dayjs";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Text, View, Pressable, TextInput } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { useAuth } from "@clerk/clerk-expo";
 
 import { baseStyles, palette } from "../styles/styles";
 
@@ -58,7 +58,7 @@ export default function Appointment() {
             console.log("selected dateString", day.dateString);
             console.log(
               "selected ISOString",
-              dayjs(day.dateString).add(8, "hour").toISOString()
+              dayjs(day.dateString).add(8, "hour").toISOString(),
             );
 
             setAppointmentData({
