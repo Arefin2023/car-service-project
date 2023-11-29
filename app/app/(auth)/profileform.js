@@ -3,10 +3,14 @@ import axios from "axios";
 import { Redirect, router } from "expo-router";
 import { useState } from "react";
 import { View, Text, Pressable, TextInput, Alert } from "react-native";
+import { useAuth } from "@clerk/clerk-expo";
 
 import { baseStyles, palette } from "../styles/styles";
 
+const apiHost = process.env.EXPO_PUBLIC_API_HOST;
+
 export default function ProfileForm() {
+  const { getToken, signOut } = useAuth();
   const [profileData, setProfileData] = useState({
     name: "",
     carmodel: "",
@@ -27,22 +31,19 @@ export default function ProfileForm() {
   }
 
   async function handleSubmit() {
-    const url = "http://192.168.178.51:3000/customers";
+    const url = `${apiHost}/profile`;
     const dataToSend = {
-      email: user.primaryEmailAddress.emailAddress,
       name: profileData.name,
-      cars: [
-        {
-          model: profileData.carmodel,
-          vehicleId: profileData.carnumber,
-        },
-      ],
+      vehicleId: profileData.carnumber,
+      vehicleMake: profileData.carmodel,
     };
     console.log(dataToSend);
     // do axios call to save profile
     // if successful, redirect to home page
     try {
-      await axios.post(url, dataToSend);
+      await axios.patch(url, dataToSend, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
       router.replace("/");
     } catch (error) {
       Alert.alert("Something went wrong", error.message);
@@ -93,6 +94,21 @@ export default function ProfileForm() {
         onPress={handleSubmit}
       >
         <Text style={{ color: "white" }}>Save profile</Text>
+      </Pressable>
+      <Pressable
+        style={({ pressed }) => {
+          return {
+            ...baseStyles.button,
+            marginTop: 10,
+            borderColor: pressed ? palette.white : palette.mediumBlue,
+            backgroundColor: "steelblue",
+          };
+        }}
+        onPress={() => {
+          signOut();
+        }}
+      >
+        <Text style={{ color: "white" }}>Signout</Text>
       </Pressable>
     </View>
   );

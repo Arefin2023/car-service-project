@@ -1,23 +1,28 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
-import { Tabs, Redirect } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-
 import { palette } from "../styles/styles";
+
+const apiHost = process.env.EXPO_PUBLIC_API_HOST;
+
 export default function TabLayout() {
   const { isSignedIn, isLoaded, user } = useUser();
+  const { getToken } = useAuth();
   const [profileCompleted, setProfileCompleted] = useState(-1); // -1: not loaded, 0: not completed, 1: completed
 
   useEffect(() => {
     setProfileCompleted(-1);
     async function checkProfile() {
-      const url = "http://192.168.178.51:3000/customers";
+      const url = `${apiHost}/profile`;
       try {
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(url, {
+          headers: { Authorization: `Bearer ${await getToken()}` },
+        });
         console.log(data);
-        if (data.name && data.cars.length > 0) {
+        if (data.name && data.vehicleId && data.vehicleMake) {
           setProfileCompleted(1);
         } else {
           setProfileCompleted(0);

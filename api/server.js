@@ -176,6 +176,10 @@ app.get(
  */
 app.post(
   "/profile/add-appointment",
+  (req, res, next) => {
+    console.log(req.headers);
+    next();
+  },
   ClerkExpressRequireAuth(),
   createAppointment
 );
