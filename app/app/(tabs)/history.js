@@ -11,7 +11,7 @@ const apiHost = process.env.EXPO_PUBLIC_API_HOST;
 export default function History() {
   const [serviceData, setServiceData] = useState([]);
   const { getToken } = useAuth();
-  const [rating, setRating] = useState(0);
+  const [ratings, setRatings] = useState({});
 
   useFocusEffect(
     useCallback(() => {
@@ -46,8 +46,10 @@ export default function History() {
                   <StarRating
                     disabled={false}
                     maxStars={5}
-                    rating={rating}
-                    selectedStar={(rating) => setRating(rating)}
+                    rating={ratings[item.id] || 0}
+                    selectedStar={(rating) =>
+                      setRatings({ ...ratings, [item.id]: rating })
+                    }
                   />
                 </Text>
               );
