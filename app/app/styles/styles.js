@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
 
 export const palette = {
-  darkBlue: "#3d5a80",
-  mediumBlue: "#98c1d9",
+  darkBlue: "#00072d",
+  mediumBlue: "#103FEF",
   lightBlue: "#e0fbfc",
   black: "#293241",
   white: "#eeffff",

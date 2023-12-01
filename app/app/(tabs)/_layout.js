@@ -62,7 +62,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: () => {
-            return <FontAwesome name="home" size={24} color="blue" />;
+            return <FontAwesome name="home" size={24} color="#103FEF" />;
           },
         }}
       />
@@ -71,7 +71,7 @@ export default function TabLayout() {
         options={{
           title: "Appointment",
           tabBarIcon: () => {
-            return <FontAwesome name="car" size={24} color="green" />;
+            return <FontAwesome name="car" size={24} color="#00072d" />;
           },
         }}
       />
