@@ -26,6 +26,7 @@ await knex.schema.createTable("appointments", function (table) {
   table.string("customerId").references("id").inTable("customers");
   table.string("service");
   table.dateTime("startTime");
+  table.integer("rating");
 });
 
 const users = await clerkClient.users.getUserList({

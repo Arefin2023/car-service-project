@@ -10,6 +10,7 @@ import {
   getAppointmentsByCustomer,
   adminGetAppointments,
   createAppointment,
+  rateAppointment,
 } from "./handlers/customers.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
@@ -174,6 +175,7 @@ app.get(
  *       '500':
  *          description: Internal Server Error
  */
+app.post("/appointments/:id/rate", ClerkExpressRequireAuth(), rateAppointment);
 app.post(
   "/profile/add-appointment",
   (req, res, next) => {

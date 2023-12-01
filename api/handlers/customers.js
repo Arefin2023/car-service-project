@@ -93,11 +93,65 @@ export const createAppointment = async (req, res) => {
   }
 };
 
+export const rateAppointment = async (req, res) => {
+  const { rating } = req.body;
+  const { id } = req.params;
+  const userId = req.auth?.claims?.sub;
+  if (!userId) {
+    return res.status(400).json({ message: "Missing userId" });
+  }
+  if (!rating) {
+    return res.status(400).json({ message: "Missing rating" });
+  }
+  if (!id) {
+    return res.status(400).json({ message: "Missing appointment id" });
+  }
+  try {
+    const result = await knex("appointments")
+      .where({ id, userId })
+      .update({ rating });
+    if (!result) {
+      return res.status(400).json({ message: "Appointment not found" });
+    }
+    return res.json({ message: "Appointment updated" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const adminGetAppointments = async (req, res) => {
   console.log("adminGetAppointments");
   try {
-    const appointments = await knex("appointments").select("*");
-    return res.json(appointments);
+    const appointments = await knex("appointments")
+      .leftJoin("customers", "appointments.customerId", "customers.id")
+      .select(
+        "appointments.id",
+        "appointments.service",
+        "appointments.startTime",
+        "appointments.customerId",
+        "appointments.rating",
+        "customers.name",
+        "customers.email",
+        "customers.vehicleId",
+        "customers.vehicleMake"
+      );
+
+    const transformedAppointments = appointments.map((appointment) => {
+      const { name, email, vehicleId, vehicleMake, customerId, ...rest } =
+        appointment;
+      return {
+        ...rest,
+        customer: {
+          id: customerId,
+          name,
+          email,
+          vehicleId,
+          vehicleMake,
+        },
+      };
+    });
+    return res.json(transformedAppointments);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
