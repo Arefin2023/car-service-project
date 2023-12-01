@@ -3,7 +3,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Text, View, Pressable, TextInput } from "react-native";
+import { Text, View, Pressable, TextInput, ScrollView } from "react-native";
 import { Calendar } from "react-native-calendars";
 
 import { baseStyles, palette } from "../styles/styles";
@@ -11,6 +11,7 @@ import { baseStyles, palette } from "../styles/styles";
 const apiHost = process.env.EXPO_PUBLIC_API_HOST;
 
 export default function Appointment() {
+  const [shouldShow, setShouldShow] = useState(true);
   const { getToken } = useAuth();
   const [appointmentData, setAppointmentData] = useState({
     service: "",
@@ -47,76 +48,87 @@ export default function Appointment() {
   }
 
   return (
-    <View>
-      <Text>Book an Appointment</Text>
+    <ScrollView>
       <View>
-        <Calendar
-          minDate={tomorrow}
-          maxDate={dayjs(tomorrow).add(30, "day").format("YYYY-MM-DD")}
-          onDayPress={(day) => {
-            console.log("selected day", day);
-            console.log("selected dateString", day.dateString);
-            console.log(
-              "selected ISOString",
-              dayjs(day.dateString).add(8, "hour").toISOString(),
-            );
-
-            setAppointmentData({
-              ...appointmentData,
-              start: dayjs(day.dateString).add(8, "hour"),
-            });
-          }}
-          markedDates={
-            appointmentData.start
-              ? {
-                  [appointmentData.start.format("YYYY-MM-DD")]: {
-                    selected: true,
-                    selectedColor: "steelblue",
-                  },
-                }
-              : {}
-          }
-        />
-      </View>
-      {appointmentData.start ? (
+        <Text>Book an Appointment</Text>
         <View>
-          <Text>
-            You have selected an appointment for{" "}
-            {dayjs(appointmentData.start).format("DD.MM.YYYY")}
-          </Text>
-          <Text>
-            {dayjs(appointmentData.start).format("HH:mm")} -{" "}
-            {dayjs(appointmentData.start).add(9, "hour").format("HH:mm")}
-          </Text>
-          <View style={[baseStyles.formGroup]}>
-            <Text style={[baseStyles.label]}>Purpose of the service</Text>
-            <TextInput
-              selectionColor={palette.white}
-              style={[baseStyles.input]}
-              onChangeText={(value) => handleChange("service", value)}
-              value={appointmentData.service}
+          {shouldShow ? (
+            <Calendar
+              minDate={tomorrow}
+              maxDate={dayjs(tomorrow).add(30, "day").format("YYYY-MM-DD")}
+              onDayPress={(day) => {
+                console.log("selected day", day);
+                console.log("selected dateString", day.dateString);
+                console.log(
+                  "selected ISOString",
+                  dayjs(day.dateString).add(8, "hour").toISOString()
+                );
+
+                setAppointmentData({
+                  ...appointmentData,
+                  start: dayjs(day.dateString).add(8, "hour"),
+                });
+              }}
+              markedDates={
+                appointmentData.start
+                  ? {
+                      [appointmentData.start.format("YYYY-MM-DD")]: {
+                        selected: true,
+                        selectedColor: "steelblue",
+                      },
+                    }
+                  : {}
+              }
             />
-          </View>
-          <Pressable
-            style={{
-              backgroundColor: "steelblue",
-              width: 150,
-              borderRadius: 5,
-              height: 50,
-            }}
-            onPress={handleSubmit}
-          >
-            <Text style={{ textAlign: "center", color: "white" }}>
-              Click to confirm
-            </Text>
-          </Pressable>
+          ) : null}
         </View>
-      ) : null}
+        {appointmentData.start ? (
+          <View>
+            <Text>
+              You have selected an appointment for{" "}
+              {dayjs(appointmentData.start).format("DD.MM.YYYY")}
+            </Text>
+            <Text>
+              {dayjs(appointmentData.start).format("HH:mm")} -{" "}
+              {dayjs(appointmentData.start).add(9, "hour").format("HH:mm")}
+            </Text>
+            <View style={[baseStyles.formGroup]}>
+              <Text style={[baseStyles.label]}>Purpose of the service</Text>
+              <TextInput
+                selectionColor={palette.white}
+                style={[baseStyles.input]}
+                onChangeText={(value) => handleChange("service", value)}
+                value={appointmentData.service}
+              />
+            </View>
+            <Pressable
+              style={{
+                backgroundColor: "steelblue",
+                width: 150,
+                borderRadius: 5,
+                height: 50,
+              }}
+              onPressIn={handleSubmit}
+              onPress={() => setShouldShow(!shouldShow)}
+            >
+              {shouldShow ? (
+                <Text style={{ textAlign: "center", color: "white" }}>
+                  Click to confirm
+                </Text>
+              ) : (
+                <Text style={{ textAlign: "center", color: "white" }}>
+                  Create another appointment
+                </Text>
+              )}
+            </Pressable>
+          </View>
+        ) : null}
 
-      <Link href="/">Home</Link>
-      <Link href="/message">Messages</Link>
+        <Link href="/">Home</Link>
+        <Link href="/message">Messages</Link>
 
-      <Link href="/history">History</Link>
-    </View>
+        <Link href="/history">History</Link>
+      </View>
+    </ScrollView>
   );
 }
