@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Text, View } from "react-native";
-import StarRating from "react-native-star-rating-widget";
+import StarRating from "react-native-star-rating";
 
 const apiHost = process.env.EXPO_PUBLIC_API_HOST;
 
@@ -43,7 +43,12 @@ export default function History() {
                 <Text key={item.id}>
                   {dayjs(item.startTime).format("DD.MM.YYYY")}
                   {item.service}
-                  <StarRating rating={rating} onChange={setRating} />
+                  <StarRating
+                    disabled={false}
+                    maxStars={5}
+                    rating={rating}
+                    selectedStar={(rating) => setRating(rating)}
+                  />
                 </Text>
               );
             })
