@@ -30,7 +30,7 @@ export default function History() {
         }
       }
       loadData();
-    }, [])
+    }, []),
   );
 
   return (

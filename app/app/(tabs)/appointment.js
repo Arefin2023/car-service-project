@@ -61,7 +61,7 @@ export default function Appointment() {
                 console.log("selected dateString", day.dateString);
                 console.log(
                   "selected ISOString",
-                  dayjs(day.dateString).add(8, "hour").toISOString()
+                  dayjs(day.dateString).add(8, "hour").toISOString(),
                 );
 
                 setAppointmentData({
