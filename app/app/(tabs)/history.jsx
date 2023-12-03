@@ -34,6 +34,22 @@ export default function History() {
     }, [])
   );
 
+  async function saveRatings(id, rating) {
+    const url = `${apiHost}/appointments/${id}/rate`;
+    try {
+      const { data } = await axios.post(
+        url,
+        { rating },
+        {
+          headers: { Authorization: `Bearer ${await getToken()}` },
+        }
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <View>
       <Text>Service History and reviews</Text>
@@ -48,9 +64,10 @@ export default function History() {
                     disabled={false}
                     maxStars={5}
                     rating={ratings[item.id] || 0}
-                    selectedStar={(rating) =>
-                      setRatings({ ...ratings, [item.id]: rating })
-                    }
+                    selectedStar={(rating) => {
+                      setRatings({ ...ratings, [item.id]: rating });
+                      saveRatings(item.id, rating);
+                    }}
                   />
                 </Text>
               );

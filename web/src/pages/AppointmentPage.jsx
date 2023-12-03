@@ -31,15 +31,20 @@ export function AppointmentPage() {
     return dayjs(dateString).format("DD.MM.YYYY");
   }
 
-  const rows = data.map((item) => {
-    console.log(item);
-    return {
-      date: formatDate(item.startTime),
-      customer: "item.customer.name",
-      car: "item.customer.vehicleId",
-      service: item.service,
-    };
-  });
+  const rows = data
+    .filter((item) => {
+      return dayjs(item.startTime).isAfter(dayjs());
+    })
+    .map((item) => {
+      console.log(item);
+      return {
+        date: formatDate(item.startTime),
+        customer: item.customer.name,
+        car: item.customer.vehicleId,
+        service: item.service,
+        rating: item.rating,
+      };
+    });
 
   return (
     <>

@@ -108,7 +108,7 @@ export const rateAppointment = async (req, res) => {
   }
   try {
     const result = await knex("appointments")
-      .where({ id, userId })
+      .where({ id, customerId: userId })
       .update({ rating });
     if (!result) {
       return res.status(400).json({ message: "Appointment not found" });

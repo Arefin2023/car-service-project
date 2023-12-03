@@ -10,6 +10,29 @@ import "dotenv/config";
 import clerkClient from "@clerk/clerk-sdk-node";
 import { knex } from "./util/knex.js";
 
+const userData = {
+  "ralf.siewert@actyvyst.com": {
+    name: "Ralf Siewert",
+    vehicleId: "12345",
+    vehicleMake: "BMW",
+  },
+  "isewat@gmail.com": {
+    name: "John Doe",
+    vehicleId: "67890",
+    vehicleMake: "Audi",
+  },
+  "arefin.hasnat@gmail.com": {
+    name: "Arefin Hasnat",
+    vehicleId: "34567",
+    vehicleMake: "Mercedes",
+  },
+  "shumon90@yahoo.com": {
+    name: "Shumon",
+    vehicleId: "89034",
+    vehicleMake: "Fiat",
+  },
+};
+
 await knex.schema.dropTableIfExists("appointments");
 await knex.schema.dropTableIfExists("customers");
 
@@ -40,10 +63,13 @@ for (const user of users) {
   const primaryEmailAddress = user.emailAddresses.find(
     (emailAddress) => emailAddress.id === user.primaryEmailAddressId
   );
+  const customer = userData[primaryEmailAddress.emailAddress];
+  console.log("customer", customer);
   await knex("customers").insert({
     id: user.id,
     name: user.fullName,
     email: primaryEmailAddress.emailAddress,
+    ...customer,
   });
   await knex("appointments").insert({
     customerId: user.id,
