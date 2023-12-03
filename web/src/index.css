@@ -29,24 +29,26 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-
+  background-color: #00072d;
+  padding: 120px;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
-/* main{
+
+.sign-in-container {
   display: flex;
   justify-content: center;
-  
-} */
+}
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
   text-align: center;
+  color: #103fef;
 }
 h3 {
-  color: steelblue;
+  color: #103fef;
   text-align: center;
 }
 

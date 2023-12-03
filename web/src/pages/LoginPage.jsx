@@ -3,9 +3,10 @@ import SignIn from "../components/SignIn";
 export function LoginPage() {
   return (
     <>
-      <h1>Login Page</h1>
-      <SignIn />
-      <Link to="./sign-in">Welcome</Link>
+      {/* <SignIn /> */}
+      <div className="flex-container">
+        <Link to="./welcome">Click here to Login</Link>
+      </div>
     </>
   );
 }

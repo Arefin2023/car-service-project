@@ -6,13 +6,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { StyledTableCell, StyledTableRow } from "./RowCellStyle";
 
-export function AppointmentTable({ rows }) {
+export function AppointmentTable({ rows, showRating = false }) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Date</StyledTableCell>
+            {showRating && (
+              <StyledTableCell align="right">Rating</StyledTableCell>
+            )}
             <StyledTableCell align="right">Customer Name</StyledTableCell>
             <StyledTableCell align="right">Car Number</StyledTableCell>
             <StyledTableCell align="right">Service Type</StyledTableCell>
@@ -22,6 +25,9 @@ export function AppointmentTable({ rows }) {
           {rows.map((row) => (
             <StyledTableRow key={row.customer}>
               <StyledTableCell>{row.date}</StyledTableCell>
+              {showRating && (
+                <StyledTableCell align="right">{row.rating}</StyledTableCell>
+              )}
               <StyledTableCell align="right">{row.customer}</StyledTableCell>
               <StyledTableCell align="right">{row.car}</StyledTableCell>
               <StyledTableCell align="right">{row.service}</StyledTableCell>

@@ -1,6 +1,10 @@
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { Slot } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { LogBox } from "react-native";
+
+// LogBox.ignoreAllLogs(true);
+LogBox.ignoreLogs(["ViewPropTypes"]);
 
 const tokenCache = {
   async getToken(key) {

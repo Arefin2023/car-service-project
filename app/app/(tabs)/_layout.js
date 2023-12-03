@@ -56,13 +56,30 @@ export default function TabLayout() {
   }
 
   return (
-    <Tabs>
+    <Tabs
+    // screenOptions={{
+    //   // headerShown: false,
+    //   tabBarActiveTintColor: palette.highlight,
+    //   tabBarInactiveTintColor: palette.mediumBlue,
+    //   tabBarStyle: {
+    //     backgroundColor: palette.mediumBlue,
+    //     borderTopWidth: 0,
+    //   },
+    // }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: () => {
-            return <FontAwesome name="home" size={24} color="blue" />;
+          tabBarIcon: ({ focused }) => {
+            console.log("focused", focused);
+            return (
+              <FontAwesome
+                name="home"
+                size={24}
+                color={focused ? "#f00" : "#103FEF"}
+              />
+            );
           },
         }}
       />
@@ -71,7 +88,7 @@ export default function TabLayout() {
         options={{
           title: "Appointment",
           tabBarIcon: () => {
-            return <FontAwesome name="car" size={24} color="green" />;
+            return <FontAwesome name="car" size={24} color="#00072d" />;
           },
         }}
       />

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { AppointmentTable } from "../components/AppointmentTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 
 export function AppointmentPage() {
   const url = "/api/admin/appointments";
@@ -27,23 +28,27 @@ export function AppointmentPage() {
   }, []);
 
   function formatDate(dateString) {
-    const myDate = new Date(dateString);
-    return myDate.toLocaleDateString("de-DE");
+    return dayjs(dateString).format("DD.MM.YYYY");
   }
 
-  const rows = data.map((item) => {
-    console.log(item);
-    return {
-      date: formatDate(item.startTime),
-      customer: "item.customer.name",
-      car: "item.customer.vehicleId",
-      service: item.service,
-    };
-  });
+  const rows = data
+    .filter((item) => {
+      return dayjs(item.startTime).isAfter(dayjs());
+    })
+    .map((item) => {
+      console.log(item);
+      return {
+        date: formatDate(item.startTime),
+        customer: item.customer.name,
+        car: item.customer.vehicleId,
+        service: item.service,
+        rating: item.rating,
+      };
+    });
 
   return (
     <>
-      <div style={{ width: "100vw" }}>
+      <div style={{ width: "100%" }}>
         <h3>Appointments page</h3>
         {isError && <p>We have an error</p>}
         {isLoading && <p>Loading...</p>}

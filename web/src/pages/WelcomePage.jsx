@@ -4,14 +4,14 @@ import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 
 export function WelcomePage() {
-  const [token, setToken] = useState(null);
+  // const [token, setToken] = useState(null);
 
-  const { getToken } = useAuth();
+  // const { getToken } = useAuth();
   return (
     <>
       <h3>Welcome Page</h3>
       <div className="flex-container">
-        {token ? (
+        {/* {token ? (
           <>
             <p>{token.slice(0, 9) + "..."}</p>
             <button
@@ -36,7 +36,7 @@ export function WelcomePage() {
           </>
         )}
       </div>
-      <div className="flex-container">
+      <div className="flex-container"> */}
         <Link to="/appointment">
           <div className="box">
             <h2>View Customers Appointments</h2>
@@ -60,7 +60,6 @@ export function WelcomePage() {
           </div>
         </Link>
       </div>
-      <Link to="/">Login Page</Link>
     </>
   );
 }
