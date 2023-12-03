@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Text, View } from "react-native";
+// eslint-disable-next-line
 import StarRating from "react-native-star-rating";
 
 const apiHost = process.env.EXPO_PUBLIC_API_HOST;
@@ -30,7 +31,7 @@ export default function History() {
         }
       }
       loadData();
-    }, []),
+    }, [])
   );
 
   return (
