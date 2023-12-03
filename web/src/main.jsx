@@ -34,7 +34,11 @@ const router = createBrowserRouter([
       { index: true, element: <LoginPage /> },
       {
         path: "/sign-in/*",
-        element: <SignIn routing="path" path="/sign-in" />,
+        element: (
+          <div className="sign-in-container">
+            <SignIn routing="path" path="/sign-in" />
+          </div>
+        ),
       },
       {
         path: "/sign-up/*",
