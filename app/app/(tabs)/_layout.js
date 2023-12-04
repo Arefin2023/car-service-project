@@ -77,39 +77,61 @@ export default function TabLayout() {
               <FontAwesome
                 name="home"
                 size={24}
-                color={focused ? "#f00" : "#103FEF"}
+                color={focused ? palette.highlight : "#ddd"}
               />
             );
           },
+          tabBarActiveTintColor: palette.black,
         }}
       />
       <Tabs.Screen
         name="appointment"
         options={{
           title: "Appointment",
-          tabBarIcon: () => {
-            return <FontAwesome name="car" size={24} color="#00072d" />;
+          tabBarIcon: ({ focused }) => {
+            return (
+              <FontAwesome
+                name="car"
+                size={24}
+                color={focused ? palette.darkBlue : "#ddd"}
+              />
+            );
           },
-          tabBarActiveBackgroundColor: "#002244",
-          tabBarInactiveBackgroundColor: "red",
+          tabBarActiveTintColor: palette.black,
+          // tabBarActiveBackgroundColor: "#002244",
+          // tabBarInactiveBackgroundColor: "red",
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: "History",
-          tabBarIcon: () => {
-            return <FontAwesome name="folder" size={24} color="orange" />;
+          tabBarIcon: ({ focused }) => {
+            return (
+              <FontAwesome
+                name="folder"
+                size={24}
+                color={focused ? "orange" : "#ddd"}
+              />
+            );
           },
+          tabBarActiveTintColor: palette.black,
         }}
       />
       <Tabs.Screen
         name="message"
         options={{
           title: "Messages",
-          tabBarIcon: () => {
-            return <FontAwesome name="envelope" size={24} color="lightblue" />;
+          tabBarIcon: ({ focused }) => {
+            return (
+              <FontAwesome
+                name="envelope"
+                size={24}
+                color={focused ? "lightblue" : "#ddd"}
+              />
+            );
           },
+          tabBarActiveTintColor: palette.black,
         }}
       />
     </Tabs>

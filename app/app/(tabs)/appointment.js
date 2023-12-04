@@ -47,82 +47,105 @@ export default function Appointment() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View>
-        <Text>Book an Appointment</Text>
-        <View>
-          {shouldShow ? (
-            <Calendar
-              minDate={tomorrow}
-              maxDate={dayjs(tomorrow).add(30, "day").format("YYYY-MM-DD")}
-              onDayPress={(day) => {
-                console.log("selected day", day);
-                console.log("selected dateString", day.dateString);
-                console.log(
-                  "selected ISOString",
-                  dayjs(day.dateString).add(8, "hour").toISOString(),
-                );
+        {shouldShow ? (
+          <Calendar
+            minDate={tomorrow}
+            maxDate={dayjs(tomorrow).add(30, "day").format("YYYY-MM-DD")}
+            onDayPress={(day) => {
+              console.log("selected day", day);
+              console.log("selected dateString", day.dateString);
+              console.log(
+                "selected ISOString",
+                dayjs(day.dateString).add(8, "hour").toISOString()
+              );
 
-                setAppointmentData({
-                  ...appointmentData,
-                  start: dayjs(day.dateString).add(8, "hour"),
-                });
-              }}
-              markedDates={
-                appointmentData.start
-                  ? {
-                      [appointmentData.start.format("YYYY-MM-DD")]: {
-                        selected: true,
-                        selectedColor: "steelblue",
-                      },
-                    }
-                  : {}
-              }
-            />
-          ) : null}
-        </View>
-        {appointmentData.start ? (
-          <View>
-            <Text>
-              You have selected an appointment for{" "}
-              {dayjs(appointmentData.start).format("DD.MM.YYYY")}
-            </Text>
-            <Text>
-              {dayjs(appointmentData.start).format("HH:mm")} -{" "}
-              {dayjs(appointmentData.start).add(9, "hour").format("HH:mm")}
-            </Text>
-            <View style={[baseStyles.formGroup]}>
-              <Text style={[baseStyles.label]}>Purpose of the service</Text>
-              <TextInput
-                selectionColor={palette.white}
-                style={[baseStyles.input]}
-                onChangeText={(value) => handleChange("service", value)}
-                value={appointmentData.service}
-              />
-            </View>
-            <Pressable
-              style={{
-                backgroundColor: "steelblue",
-                width: 150,
-                borderRadius: 5,
-                height: 50,
-              }}
-              onPressIn={handleSubmit}
-              onPress={() => setShouldShow(!shouldShow)}
-            >
-              {shouldShow ? (
-                <Text style={{ textAlign: "center", color: "white" }}>
-                  Click to confirm
-                </Text>
-              ) : (
-                <Text style={{ textAlign: "center", color: "white" }}>
-                  Create another appointment
-                </Text>
-              )}
-            </Pressable>
-          </View>
+              setAppointmentData({
+                ...appointmentData,
+                start: dayjs(day.dateString).add(8, "hour"),
+              });
+            }}
+            markedDates={
+              appointmentData.start
+                ? {
+                    [appointmentData.start.format("YYYY-MM-DD")]: {
+                      selected: true,
+                      selectedColor: palette.highlight,
+                    },
+                  }
+                : {}
+            }
+          />
         ) : null}
       </View>
+      {appointmentData.start ? (
+        <View style={[baseStyles.container, { flex: 1 }]}>
+          <Text style={[baseStyles.text]}>
+            You have selected an appointment for{" "}
+          </Text>
+          <Text
+            style={[
+              baseStyles.text,
+              { color: palette.highlight, marginTop: 12 },
+            ]}
+          >
+            {dayjs(appointmentData.start).format("dddd DD.MM.YYYY")}
+          </Text>
+          <Text style={[baseStyles.text, { color: palette.highlight }]}>
+            {dayjs(appointmentData.start).format("HH:mm")} -{" "}
+            {dayjs(appointmentData.start).add(9, "hour").format("HH:mm")}
+          </Text>
+          <View style={[baseStyles.formGroup, { marginTop: 12 }]}>
+            {shouldShow && (
+              <>
+                <Text style={[baseStyles.label]}>Purpose of the service</Text>
+
+                <TextInput
+                  selectionColor={palette.white}
+                  style={[baseStyles.input]}
+                  onChangeText={(value) => handleChange("service", value)}
+                  value={appointmentData.service}
+                />
+              </>
+            )}
+          </View>
+
+          <Pressable
+            style={({ pressed }) => {
+              return {
+                ...baseStyles.button,
+                marginTop: 10,
+                backgroundColor: pressed
+                  ? palette.mediumBlue
+                  : palette.darkBlue,
+              };
+            }}
+            onPress={() => {
+              if (shouldShow) {
+                handleSubmit();
+              } else {
+                setAppointmentData({
+                  service: "",
+                  start: null,
+                });
+              }
+              setShouldShow(!shouldShow);
+            }}
+            // onPress={() => setShouldShow(!shouldShow)}
+          >
+            {shouldShow ? (
+              <Text style={{ textAlign: "center", color: "white" }}>
+                Click to confirm
+              </Text>
+            ) : (
+              <Text style={{ textAlign: "center", color: "white" }}>
+                Create another appointment
+              </Text>
+            )}
+          </Pressable>
+        </View>
+      ) : null}
     </ScrollView>
   );
 }

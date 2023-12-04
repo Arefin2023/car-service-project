@@ -1,3 +1,4 @@
+import React from "react";
 import { useAuth } from "@clerk/clerk-expo";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -5,10 +6,8 @@ import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Text, View } from "react-native";
 
-import { Card } from "../components/Card";
-
-// eslint-disable-next-line
-import StarRating from "react-native-star-rating";
+import Card from "../components/Card";
+import { baseStyles } from "../styles/styles";
 
 const apiHost = process.env.EXPO_PUBLIC_API_HOST;
 
@@ -34,7 +33,7 @@ export default function History() {
         }
       }
       loadData();
-    }, []),
+    }, [])
   );
 
   async function saveRatings(id, rating) {
@@ -45,7 +44,7 @@ export default function History() {
         { rating },
         {
           headers: { Authorization: `Bearer ${await getToken()}` },
-        },
+        }
       );
       console.log(data);
     } catch (error) {
@@ -54,29 +53,24 @@ export default function History() {
   }
 
   return (
-    <View>
-      <Text>Service History and reviews</Text>
-      <View>
-        {serviceData.length > 0
-          ? serviceData.map((item) => {
-              return (
-                <Text key={item.id}>
-                  {dayjs(item.startTime).format("DD.MM.YYYY")}
-                  {item.service}
-                  <StarRating
-                    disabled={false}
-                    maxStars={5}
-                    rating={ratings[item.id] || 0}
-                    selectedStar={(rating) => {
-                      setRatings({ ...ratings, [item.id]: rating });
-                      saveRatings(item.id, rating);
-                    }}
-                  />
-                </Text>
-              );
-            })
-          : null}
-      </View>
+    <View style={[baseStyles.container, { justifyContent: "flex-start" }]}>
+      {/* <Text>Service History and reviews</Text> */}
+      {serviceData.length > 0 &&
+        serviceData.map((item) => {
+          return (
+            <>
+              <Card
+                date={item.startTime}
+                service={item.service}
+                rating={ratings[item.id] || 0}
+                onRatingChange={(rating) => {
+                  setRatings({ ...ratings, [item.id]: rating });
+                  saveRatings(item.id, rating);
+                }}
+              />
+            </>
+          );
+        })}
     </View>
   );
 }

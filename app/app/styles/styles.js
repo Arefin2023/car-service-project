@@ -16,6 +16,7 @@ export const baseStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    color: palette.white,
   },
   text: {
     color: palette.white,
@@ -23,7 +24,7 @@ export const baseStyles = StyleSheet.create({
   },
   heading: {
     color: palette.white,
-    fontSize: 40,
+    fontSize: 36,
     marginBottom: 20,
   },
   button: {
@@ -39,14 +40,14 @@ export const baseStyles = StyleSheet.create({
     fontSize: 20,
   },
   label: {
-    color: palette.black,
+    color: palette.white,
     fontSize: 12,
     fontWeight: 300,
     alignSelf: "flex-start",
     padding: 0,
   },
   input: {
-    color: palette.black,
+    color: palette.white,
     width: "100%",
     margin: 0,
     borderWidth: 1,
@@ -63,8 +64,7 @@ export const baseStyles = StyleSheet.create({
   card: {
     display: "flex",
     position: "relative",
-    width: "80%",
-    backgroundColor: "#103fef",
+    width: "96%",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -73,5 +73,9 @@ export const baseStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    borderRadius: 14,
+    padding: 12,
+    backgroundColor: "#fdfdfd",
+    color: palette.black,
   },
 });

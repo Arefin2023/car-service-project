@@ -16,20 +16,11 @@ const userData = {
     vehicleId: "12345",
     vehicleMake: "BMW",
   },
-  "isewat@gmail.com": {
-    name: "John Doe",
-    vehicleId: "67890",
-    vehicleMake: "Audi",
-  },
+
   "arefin.hasnat@gmail.com": {
     name: "Arefin Hasnat",
     vehicleId: "34567",
     vehicleMake: "Mercedes",
-  },
-  "shumon90@yahoo.com": {
-    name: "Shumon",
-    vehicleId: "89034",
-    vehicleMake: "Fiat",
   },
 };
 
@@ -65,6 +56,9 @@ for (const user of users) {
   );
   const customer = userData[primaryEmailAddress.emailAddress];
   console.log("customer", customer);
+  if (!customer) {
+    continue;
+  }
   await knex("customers").insert({
     id: user.id,
     name: user.fullName,

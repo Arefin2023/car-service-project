@@ -52,8 +52,9 @@ export default function ProfileForm() {
 
   return (
     <View style={[baseStyles.container]}>
-      <Text>User ID</Text>
-      <Text>{user.id}</Text>
+      {/* <Text>User ID</Text>
+      <Text>{user.id}</Text> */}
+      <Text style={[baseStyles.heading]}>Complete your profile</Text>
       <View style={[baseStyles.formGroup]}>
         <Text style={[baseStyles.label]}>Full name</Text>
         <TextInput
