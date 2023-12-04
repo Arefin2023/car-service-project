@@ -15,6 +15,10 @@ export default function Home() {
           Welcome {user.primaryEmailAddress.emailAddress} to our car servicing
           app
         </Text>
+        <Text>
+          Here you can book an appointment for servicing your car in just a few
+          steps
+        </Text>
       </View>
       <View>
         <Pressable
