@@ -32,7 +32,7 @@ export function WipPage() {
 
   const rows = data
     .filter((item) => {
-      return dayjs(item.startTime).filter(dayjs());
+      return dayjs(item.startTime).isSame(dayjs());
     })
     .map((item) => {
       console.log(item);
