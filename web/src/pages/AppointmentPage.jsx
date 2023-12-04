@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { AppointmentTable } from "../components/AppointmentTable";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -54,7 +53,6 @@ export function AppointmentPage() {
         {isLoading && <p>Loading...</p>}
 
         <AppointmentTable rows={rows} />
-        <Link to="/welcome">Back to Welcome Page</Link>
       </div>
     </>
   );

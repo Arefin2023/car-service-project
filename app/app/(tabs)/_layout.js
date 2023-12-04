@@ -90,6 +90,8 @@ export default function TabLayout() {
           tabBarIcon: () => {
             return <FontAwesome name="car" size={24} color="#00072d" />;
           },
+          tabBarActiveBackgroundColor: "#002244",
+          tabBarInactiveBackgroundColor: "red",
         }}
       />
       <Tabs.Screen

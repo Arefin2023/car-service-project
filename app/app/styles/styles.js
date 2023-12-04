@@ -60,4 +60,18 @@ export const baseStyles = StyleSheet.create({
     width: "100%",
     gap: 4,
   },
+  card: {
+    display: "flex",
+    position: "relative",
+    width: "80%",
+    backgroundColor: "#103fef",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
 });

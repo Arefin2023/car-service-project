@@ -1,7 +1,6 @@
 import { useAuth } from "@clerk/clerk-expo";
 import axios from "axios";
 import dayjs from "dayjs";
-import { Link } from "expo-router";
 import { useState } from "react";
 import { Text, View, Pressable, TextInput, ScrollView } from "react-native";
 import { Calendar } from "react-native-calendars";
@@ -123,11 +122,6 @@ export default function Appointment() {
             </Pressable>
           </View>
         ) : null}
-
-        <Link href="/">Home</Link>
-        <Link href="/message">Messages</Link>
-
-        <Link href="/history">History</Link>
       </View>
     </ScrollView>
   );

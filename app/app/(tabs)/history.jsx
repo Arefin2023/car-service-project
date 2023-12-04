@@ -1,9 +1,12 @@
 import { useAuth } from "@clerk/clerk-expo";
 import axios from "axios";
 import dayjs from "dayjs";
-import { Link, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Text, View } from "react-native";
+
+import { Card } from "../components/Card";
+
 // eslint-disable-next-line
 import StarRating from "react-native-star-rating";
 
@@ -31,7 +34,7 @@ export default function History() {
         }
       }
       loadData();
-    }, [])
+    }, []),
   );
 
   async function saveRatings(id, rating) {
@@ -42,7 +45,7 @@ export default function History() {
         { rating },
         {
           headers: { Authorization: `Bearer ${await getToken()}` },
-        }
+        },
       );
       console.log(data);
     } catch (error) {
@@ -74,10 +77,6 @@ export default function History() {
             })
           : null}
       </View>
-      <Link href="/">Home</Link>
-      <Link href="/message">Messages</Link>
-
-      <Link href="/appointment">Book an Appointment</Link>
     </View>
   );
 }

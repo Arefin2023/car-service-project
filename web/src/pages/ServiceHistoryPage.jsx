@@ -1,9 +1,57 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import dayjs from "dayjs";
+import { HistoryTable } from "../components/HistoryTable";
+
 export function ServiceHistoryPage() {
+  const url = "/api/admin/appointments";
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function loadAppointments() {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(url);
+        console.log(data);
+        setData(data);
+      } catch (error) {
+        setIsError(true);
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadAppointments();
+  }, []);
+
+  function formatDate(dateString) {
+    return dayjs(dateString).format("DD.MM.YYYY");
+  }
+
+  const rows = data
+    .filter((item) => {
+      return dayjs(item.startTime).isBefore(dayjs());
+    })
+    .map((item) => {
+      console.log(item);
+      return {
+        date: formatDate(item.startTime),
+        customer: item.customer.name,
+        car: item.customer.vehicleId,
+        service: item.service,
+        rating: item.rating,
+      };
+    });
+
   return (
     <>
       <h3>Service History page</h3>
-      <Link to="/welcome">Back to Welcome Page</Link>
+      {isError && <p>We have an error</p>}
+      {isLoading && <p>Loading...</p>}
+
+      <HistoryTable rows={rows} />
     </>
   );
 }
